@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MyWeather | Modern Real-time Weather App</title>
+  <meta name="description" content="Check real-time weather forecasts, humidity, wind speeds, and temperatures around the world with our sleek, modern MyWeather app.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode" id="body-theme">
+  <div class="app-background-overlay"></div>
+  
+  <div class="app-container">
+    <!-- Header with logo and theme toggle -->
+    <header class="app-header">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M17.5 19A3.5 3.5 0 0 0 21 15.5c0-2.79-2.54-4.5-5-4.5-.42 0-.83.07-1.22.2A7 7 0 0 0 3 11.5c0 3.58 2.92 6.5 6.5 6.5h8" />
+        </svg>
+        <h1 id="app-title">MyWeather</h1>
+      </div>
+      
+      <!-- Theme Toggle Switch -->
+      <button class="theme-toggle" id="theme-toggle-btn" aria-label="Toggle light and dark mode">
+        <!-- Sun Icon -->
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2"></path>
+          <path d="M12 20v2"></path>
+          <path d="M4.93 4.93l1.41 1.41"></path>
+          <path d="M17.66 17.66l1.41 1.41"></path>
+          <path d="M2 12h2"></path>
+          <path d="M20 12h2"></path>
+          <path d="M6.34 17.66l-1.41 1.41"></path>
+          <path d="M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+        <!-- Moon Icon -->
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+        </svg>
+      </button>
+    </header>
+
+    <!-- Main Card -->
+    <main class="weather-card" id="main-weather-card">
+      
+      <!-- Search Form -->
+      <form class="search-form" id="weather-search-form" autocomplete="off">
+        <div class="search-wrapper">
+          <input 
+            type="text" 
+            id="city-search-input" 
+            placeholder="Search city (e.g., Paris, Tokyo)..." 
+            required 
+            aria-label="Search city"
+          />
+          <button type="submit" id="search-submit-btn" aria-label="Search">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+        </div>
+      </form>
+
+      <!-- Loading State -->
+      <div class="loading-state hidden" id="weather-loading">
+        <div class="spinner-container">
+          <div class="spinner"></div>
+          <div class="spinner-inner"></div>
+        </div>
+        <p>Fetching local atmosphere...</p>
+      </div>
+
+      <!-- Error State -->
+      <div class="error-state hidden" id="weather-error">
+        <div class="error-icon-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="12" y1="8" x2="12" y2="12"></line>
+            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+          </svg>
+        </div>
+        <p class="error-title">Oops! City Not Found</p>
+        <p class="error-message" id="error-desc">We couldn't find weather details for that location. Please check the spelling and try again.</p>
+        <button type="button" class="btn-retry" id="error-retry-btn">Try London</button>
+      </div>
+
+      <!-- Weather Data View (Initially Hidden, shown dynamically) -->
+      <div class="weather-content hidden" id="weather-info-content">
+        <!-- Main Panel: Temperature & Condition -->
+        <div class="weather-main-info">
+          <div class="location-box">
+            <h2 id="weather-city-name">Paris</h2>
+            <p id="weather-date">Wednesday, June 3</p>
+          </div>
+          
+          <div class="temp-condition-row">
+            <div class="temp-box">
+              <span class="temp-val" id="weather-temp">24</span><span class="temp-unit">°C</span>
+            </div>
+            
+            <div class="icon-condition-box">
+              <div class="icon-glow-bg"></div>
+              <img id="weather-status-icon" src="https://openweathermap.org/img/wn/10d@4x.png" alt="Weather icon" />
+              <p class="weather-desc" id="weather-description">Scattered Clouds</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider Line -->
+        <hr class="card-divider" />
+
+        <!-- Weather Stats Grid -->
+        <div class="weather-stats-grid">
+          <!-- Humidity -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper humidity-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 22a7 7 0 0 0 7-7c0-4.3-7-11-7-11S5 10.7 5 15a7 7 0 0 0 7 7z"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-humidity">64%</span>
+              <span class="stat-label">Humidity</span>
+            </div>
+          </div>
+
+          <!-- Wind Speed -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper wind-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9.59 4.59A2 2 0 1 1 11 8H2m10.59 11.41A2 2 0 1 0 14 16H2m15.73-8.27A2.5 2.5 0 1 1 19.5 12H2"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-wind">12 km/h</span>
+              <span class="stat-label">Wind Speed</span>
+            </div>
+          </div>
+
+          <!-- Feels Like -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper feels-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-feels-like">26°C</span>
+              <span class="stat-label">Feels Like</span>
+            </div>
+          </div>
+
+          <!-- Pressure -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper pressure-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 6v6l4 2"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-pressure">1012 hPa</span>
+              <span class="stat-label">Pressure</span>
+            </div>
+          </div>
+
+          <!-- Air Quality -->
+          <div class="stat-card">
+            <div id="aqi-icon-wrapper" class="stat-icon-wrapper aqi-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 22c1.25-6.7 5.82-11.7 12-12.5C18.5 9 20 7.8 22 5c.5 2 .5 4.5-1 8a13 13 0 0 1-11 9H2Z"></path>
+                <path d="M9 22v-4h4"></path>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-aqi">Good</span>
+              <span class="stat-label">Air Quality</span>
+            </div>
+          </div>
+
+          <!-- Visibility -->
+          <div class="stat-card">
+            <div class="stat-icon-wrapper visibility-color">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </div>
+            <div class="stat-details">
+              <span class="stat-value" id="stat-visibility">10 km</span>
+              <span class="stat-label">Visibility</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>Data provided by OpenWeatherMap API &bull; Created with &hearts;</p>
+    </footer>
+  </div>
+
+  <!-- JavaScript file -->
+  <script src="app.js"></script>
+</body>
+</html>
