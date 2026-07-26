@@ -16,13 +16,13 @@ Tech Stack
 
 Project Structure
 Weather-App/
-│── public/
-│── .env.example
-│── .gitignore
-│── package.json
-│── package-lock.json
-│── server.js
-└── README.md
+──> public/
+──> .env.example
+──> .gitignore
+──> package.json
+──> package-lock.json
+──> server.js
+──> README.md
 
 Installation
 
