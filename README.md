@@ -1,4 +1,3 @@
-Weather App
 A simple Weather App built using Node.js that allows users to check the current weather of any city.
 
 Features
